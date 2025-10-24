@@ -7,6 +7,7 @@ import {
     updateRuta,        // Asegúrate de exponer este método en rutasService
 } from "../../api/rutasService";
 import { listAeropuertos } from "../../api/aeropuertosService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function RutasAdmin() {
     // Listado y catálogos
@@ -41,8 +42,9 @@ export default function RutasAdmin() {
         try {
             const data = await listRutas();
             setItems(Array.isArray(data) ? data : []);
-        } catch (_) {
-            setError("No se pudo cargar el listado de rutas.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -108,8 +110,9 @@ export default function RutasAdmin() {
             setInfo("Ruta creada.");
             setNewRow({ origenId: "", destinoId: "", distanciaKm: "" });
             await refresh();
-        } catch (_) {
-            setError("No se pudo crear la ruta.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -128,8 +131,9 @@ export default function RutasAdmin() {
                 distanciaKm: String(data?.distanciaKm ?? ""),
             });
             setTimeout(() => distanciaEditRef.current?.focus(), 0);
-        } catch (_) {
-            setError("No se pudo obtener el detalle de la ruta.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -156,8 +160,9 @@ export default function RutasAdmin() {
             setInfo("Ruta actualizada.");
             setEditingId(null);
             await refresh();
-        } catch (_) {
-            setError("No se pudo actualizar la ruta.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -174,8 +179,9 @@ export default function RutasAdmin() {
             setInfo("Ruta eliminada.");
             if (editingId === id) cancelEdit();
             await refresh();
-        } catch (_) {
-            setError("No se pudo eliminar la ruta.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

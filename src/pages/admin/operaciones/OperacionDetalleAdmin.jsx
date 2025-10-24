@@ -14,6 +14,7 @@ import {
     listAsignacionesByOperacion, // 👈 IMPORTA AQUÍ
 } from "../../../api/operacionesTripulacionService";
 import { listTripulantes } from "../../../api/tripulantesService";
+import { extractHttpError } from "../../../utils/extractHttpError";
 
 const getEstadoClasses = (estado) => {
   switch (estado) {
@@ -71,8 +72,9 @@ export default function OperacionDetalleAdmin() {
             if (porOp.status === "fulfilled") setTOp(Array.isArray(porOp.value) ? porOp.value : []);
             if (crew.status === "fulfilled") setTripulantes(Array.isArray(crew.value) ? crew.value : []);
             if (asigns.status === "fulfilled") setAsignaciones(Array.isArray(asigns.value) ? asigns.value : []); // 👈
-        } catch {
-            setErr("No se pudo cargar el detalle.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setLoadingOp(false);
         }
@@ -97,8 +99,9 @@ export default function OperacionDetalleAdmin() {
             setNewTar({ tarifaId: "", precio: "", asientosDisponibles: "" });
             setInfo("Tarifa creada.");
             await loadAll();
-        } catch {
-            setErr("No se pudo crear la tarifa.");
+        } catch (e){
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setCreatingTar(false);
         }
@@ -132,7 +135,8 @@ export default function OperacionDetalleAdmin() {
             setInfo("Tarifa actualizada.");
             await loadAll();
         } catch {
-            setErr("No se pudo actualizar la tarifa.");
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setSavingTarId(null);
         }
@@ -147,7 +151,8 @@ export default function OperacionDetalleAdmin() {
             setInfo("Tarifa eliminada.");
             await loadAll();
         } catch {
-            setErr("No se pudo eliminar la tarifa.");
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setDeletingTarId(null);
         }
@@ -169,8 +174,9 @@ export default function OperacionDetalleAdmin() {
             // 👇 refresca SOLO asignaciones (si quieres ahorrar llamadas)
             const data = await listAsignacionesByOperacion(id);
             setAsignaciones(Array.isArray(data) ? data : []);
-        } catch {
-            setErr("No se pudo asignar el tripulante.");
+        } catch (e){
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setAssigning(false);
         }
@@ -185,8 +191,9 @@ export default function OperacionDetalleAdmin() {
             setInfo("Tripulante removido.");
             const data = await listAsignacionesByOperacion(id);
             setAsignaciones(Array.isArray(data) ? data : []);
-        } catch {
-            setErr("No se pudo quitar el tripulante.");
+        } catch(e) {
+            const { message } = extractHttpError(e);
+            setErr(message);
         } finally {
             setUnassigningId(null);
         }

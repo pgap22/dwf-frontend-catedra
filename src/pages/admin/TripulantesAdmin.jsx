@@ -6,6 +6,7 @@ import {
     updateTripulante,
     deleteTripulante,
 } from "../../api/tripulantesService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 const TIPOS = [
     "PILOTO",
@@ -52,8 +53,9 @@ export default function TripulantesAdmin() {
         try {
             const data = await listTripulantes();
             setItems(Array.isArray(data) ? data : []);
-        } catch (_) {
-            setError("No se pudo cargar el listado de tripulantes.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -97,8 +99,9 @@ export default function TripulantesAdmin() {
             setNewRow({ nombre: "", tipo: "" });
             setNewTipoSelect("");
             await refresh();
-        } catch (_) {
-            setError("No se pudo crear el tripulante.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -120,8 +123,9 @@ export default function TripulantesAdmin() {
             });
             setDraftTipoSelect(match);
             setTimeout(() => nombreEditRef.current?.focus(), 0);
-        } catch (_) {
-            setError("No se pudo obtener el detalle del tripulante.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -149,8 +153,9 @@ export default function TripulantesAdmin() {
             setInfo("Tripulante actualizado.");
             setEditingId(null);
             await refresh();
-        } catch (_) {
-            setError("No se pudo actualizar el tripulante.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -167,8 +172,9 @@ export default function TripulantesAdmin() {
             setInfo("Tripulante eliminado.");
             if (editingId === id) cancelEdit();
             await refresh();
-        } catch (_) {
-            setError("No se pudo eliminar el tripulante.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

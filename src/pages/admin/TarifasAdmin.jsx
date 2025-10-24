@@ -7,6 +7,7 @@ import {
     deleteTarifa,
 } from "../../api/tarifasService";
 import { listClases } from "../../api/clasesService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function TarifasAdmin() {
     // Listado
@@ -43,8 +44,9 @@ export default function TarifasAdmin() {
         try {
             const data = await listTarifas();
             setItems(Array.isArray(data) ? data : []);
-        } catch (_) {
-            setError("No se pudo cargar el listado de tarifas.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -100,8 +102,9 @@ export default function TarifasAdmin() {
             setInfo("Tarifa creada.");
             setNewRow({ codigo: "", claseId: "", reembolsable: false });
             await refresh();
-        } catch (_) {
-            setError("No se pudo crear la tarifa.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -120,8 +123,9 @@ export default function TarifasAdmin() {
                 reembolsable: !!data?.reembolsable,
             });
             setTimeout(() => codigoEditRef.current?.focus(), 0);
-        } catch (_) {
-            setError("No se pudo obtener el detalle de la tarifa.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -147,8 +151,9 @@ export default function TarifasAdmin() {
             setInfo("Tarifa actualizada.");
             setEditingId(null);
             await refresh();
-        } catch (_) {
-            setError("No se pudo actualizar la tarifa.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -165,8 +170,9 @@ export default function TarifasAdmin() {
             setInfo("Tarifa eliminada.");
             if (editingId === id) cancelEdit();
             await refresh();
-        } catch (_) {
-            setError("No se pudo eliminar la tarifa.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

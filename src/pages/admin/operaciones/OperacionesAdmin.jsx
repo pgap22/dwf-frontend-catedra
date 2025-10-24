@@ -7,6 +7,7 @@ import {
 } from "../../../api/operacionesVueloService";
 import { listAviones } from "../../../api/avionesService";
 import { listVuelos } from "../../../api/vuelosService"; // si no existe, ver fallback más abajo
+import { extractHttpError } from "../../../utils/extractHttpError";
 
 export default function OperacionesAdmin() {
     const nav = useNavigate();
@@ -55,7 +56,8 @@ export default function OperacionesAdmin() {
             if (vls.status === "fulfilled") setVuelos(Array.isArray(vls.value) ? vls.value : []);
             if (vls.status === "rejected") setCatalogError("No se pudo cargar el catálogo de vuelos.");
         } catch (e) {
-            setCatalogError("Error cargando catálogos.");
+            const { message } = extractHttpError(e);
+            setCatalogError(message);
         }
     };
 
@@ -124,9 +126,9 @@ export default function OperacionesAdmin() {
                 estado: "PROGRAMADO",
             });
             await refresh();
-        } catch (e2) {
-            console.error("Error creando operación", e2);
-            alert("No se pudo crear la operación.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            alert(message);
         } finally {
             setCreating(false);
         }
@@ -139,8 +141,8 @@ export default function OperacionesAdmin() {
             await deleteOperacion(id);
             await refresh();
         } catch (e) {
-            console.error("Error eliminando operación", e);
-            alert("No se pudo eliminar.");
+            const { message } = extractHttpError(e);
+            alert(message);
         }
     };
 

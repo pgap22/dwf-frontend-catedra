@@ -10,6 +10,7 @@ import {
 // Opcional: si tienes estos servicios, usamos dropdowns.
 import { listAviones } from "../../api/avionesService";
 import { listClases } from "../../api/clasesService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function AsientosAdmin() {
     // Catálogos opcionales
@@ -76,7 +77,8 @@ export default function AsientosAdmin() {
             setListado(Array.isArray(data) ? data : []);
             if (data?.length === 0) setInfo("Sin asientos para este avión.");
         } catch (e) {
-            setError("No se pudo cargar el listado de asientos.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCargandoListado(false);
         }
@@ -104,7 +106,8 @@ export default function AsientosAdmin() {
             setCrear({ avionId: String(payload.avionId), claseId: "", codigoAsiento: "" });
             if (String(avionIdListado) === String(payload.avionId)) await handleListarPorAvion();
         } catch (e) {
-            setError("No se pudo crear el asiento.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -124,7 +127,8 @@ export default function AsientosAdmin() {
             });
             setTimeout(() => codigoEditRef.current?.focus(), 0);
         } catch (e) {
-            setError("No se pudo obtener el detalle del asiento.");
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -153,7 +157,8 @@ export default function AsientosAdmin() {
             setEditingId(null);
             await handleListarPorAvion(); // refresca tabla si se está viendo ese avión
         } catch (e) {
-            setError("No se pudo actualizar el asiento.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -171,7 +176,8 @@ export default function AsientosAdmin() {
             if (editingId === id) cancelEdit();
             await handleListarPorAvion();
         } catch (e) {
-            setError("No se pudo eliminar el asiento.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

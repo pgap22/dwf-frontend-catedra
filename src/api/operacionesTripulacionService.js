@@ -12,5 +12,5 @@ export const desasignarTripulante = (id) =>
 // ✔ NUEVO: listar asignaciones por operación de vuelo
 export const listAsignacionesByOperacion = (operacionId) =>
   api
-    .get(`/operaciones-tripulacion/operacion-vuelo/${operacionId}`)
+    .get(`/operaciones-tripulacion/operacion/${operacionId}`)
     .then(r => r.data);

@@ -6,6 +6,7 @@ import {
     updateClase,
     deleteClase,
 } from "../../api/clasesService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function ClasesAdmin() {
     // listado
@@ -39,8 +40,9 @@ export default function ClasesAdmin() {
         try {
             const data = await listClases();
             setItems(Array.isArray(data) ? data : []);
-        } catch (_) {
-            setError("No se pudo cargar el listado de clases.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -76,8 +78,9 @@ export default function ClasesAdmin() {
             setInfo("Clase creada.");
             setNewRow({ nombre: "", descripcion: "" });
             await refresh();
-        } catch (_) {
-            setError("No se pudo crear la clase.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -95,8 +98,9 @@ export default function ClasesAdmin() {
                 descripcion: data?.descripcion || "",
             });
             setTimeout(() => nombreEditRef.current?.focus(), 0);
-        } catch (_) {
-            setError("No se pudo obtener el detalle de la clase.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -119,8 +123,9 @@ export default function ClasesAdmin() {
             setInfo("Clase actualizada.");
             setEditingId(null);
             await refresh();
-        } catch (_) {
-            setError("No se pudo actualizar la clase.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -137,8 +142,9 @@ export default function ClasesAdmin() {
             setInfo("Clase eliminada.");
             if (editingId === id) cancelEdit();
             await refresh();
-        } catch (_) {
-            setError("No se pudo eliminar la clase.");
+        } catch (e) {
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

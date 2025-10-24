@@ -6,6 +6,7 @@ import {
     updateAvion,
     deleteAvion,
 } from "../../api/avionesService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function AvionesAdmin() {
     // listado
@@ -40,7 +41,8 @@ export default function AvionesAdmin() {
             const data = await listAviones();
             setItems(Array.isArray(data) ? data : []);
         } catch (e) {
-            setError("No se pudo cargar el listado de aviones.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -86,7 +88,8 @@ export default function AvionesAdmin() {
             setNewRow({ matricula: "", modelo: "", capacidadTotal: "" });
             await refresh();
         } catch (e) {
-            setError("No se pudo crear el avión.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -106,7 +109,8 @@ export default function AvionesAdmin() {
             });
             setTimeout(() => matriculaEditRef.current?.focus(), 0);
         } catch (e) {
-            setError("No se pudo obtener el detalle del avión.");
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -133,7 +137,8 @@ export default function AvionesAdmin() {
             setEditingId(null);
             await refresh();
         } catch (e) {
-            setError("No se pudo actualizar el avión.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -151,7 +156,8 @@ export default function AvionesAdmin() {
             if (editingId === id) cancelEdit();
             await refresh();
         } catch (e) {
-            setError("No se pudo eliminar el avión.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

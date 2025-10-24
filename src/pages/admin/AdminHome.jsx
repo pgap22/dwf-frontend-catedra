@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getEstadisticas } from "../../api/estadisticasService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function AdminHome() {
   const [stats, setStats] = useState(null);
@@ -15,7 +16,8 @@ export default function AdminHome() {
       setStats(data || null);
       setUpdatedAt(new Date());
     } catch (e) {
-      setError("No se pudieron obtener las estadísticas.");
+      const { message } = extractHttpError(e);
+      setError(message);
     } finally {
       setLoading(false);
     }

@@ -6,6 +6,7 @@ import {
     updateAeropuerto,
     deleteAeropuerto,
 } from "../../api/aeropuertosService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function AeropuertosAdmin() {
     // Estado base
@@ -40,7 +41,8 @@ export default function AeropuertosAdmin() {
             const data = await listAeropuertos();
             setItems(Array.isArray(data) ? data : []);
         } catch (e) {
-            setError("No se pudo cargar el listado.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -91,7 +93,8 @@ export default function AeropuertosAdmin() {
             setInfo("Aeropuerto creado.");
             await refresh();
         } catch (e) {
-            setError("No se pudo crear el aeropuerto.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setCreating(false);
         }
@@ -112,7 +115,8 @@ export default function AeropuertosAdmin() {
             });
             setTimeout(() => nombreEditRef.current?.focus(), 0);
         } catch (e) {
-            setError("No se pudo obtener el detalle.");
+            const { message } = extractHttpError(e);
+            setError(message);
         }
     };
 
@@ -141,7 +145,8 @@ export default function AeropuertosAdmin() {
             setEditingId(null);
             await refresh();
         } catch (e) {
-            setError("No se pudo actualizar.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setSavingId(null);
         }
@@ -159,7 +164,8 @@ export default function AeropuertosAdmin() {
             if (editingId === id) cancelEdit();
             await refresh();
         } catch (e) {
-            setError("No se pudo eliminar.");
+            const { message } = extractHttpError(e);
+            setError(message);
         } finally {
             setDeletingId(null);
         }

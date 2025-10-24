@@ -6,6 +6,7 @@ import {
   updateAerolinea,
   deleteAerolinea,
 } from "../../api/aerolineasService";
+import { extractHttpError } from "../../utils/extractHttpError";
 
 export default function AerolineasAdmin() {
   // listado
@@ -35,7 +36,8 @@ export default function AerolineasAdmin() {
       const data = await listAerolineas();
       setItems(Array.isArray(data) ? data : []);
     } catch (e) {
-      setError("No se pudo cargar el listado.");
+      const { message } = extractHttpError(e);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,8 @@ export default function AerolineasAdmin() {
       setInfo("Aerolínea creada.");
       await refresh();
     } catch (e) {
-      setError("No se pudo crear la aerolínea.");
+      const { message } = extractHttpError(e);
+      setError(message);
     } finally {
       setCreating(false);
     }
@@ -96,7 +99,8 @@ export default function AerolineasAdmin() {
         nombreInputRef.current?.focus();
       }, 0);
     } catch (e) {
-      setError("No se pudo obtener el detalle.");
+      const { message } = extractHttpError(e);
+      setError(message);
     }
   };
 
@@ -122,7 +126,8 @@ export default function AerolineasAdmin() {
       setEditingId(null);
       await refresh();
     } catch (e) {
-      setError("No se pudo actualizar.");
+      const { message } = extractHttpError(e);
+      setError(message);
     } finally {
       setSavingId(null);
     }
@@ -142,7 +147,8 @@ export default function AerolineasAdmin() {
       if (editingId === id) cancelEdit();
       await refresh();
     } catch (e) {
-      setError("No se pudo eliminar.");
+      const { message } = extractHttpError(e);
+      setError(message);
     } finally {
       setDeletingId(null);
     }
