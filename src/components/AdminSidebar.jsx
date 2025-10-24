@@ -54,6 +54,8 @@ export default function AdminNavbar() {
     const linksMain = useMemo(() => ([
         { to: "/admin", label: "Inicio" },
         { to: "/admin/operaciones", label: "Operaciones" },
+        { to: "/admin/reservas", label: "Reservas" },
+        { to: "/admin/reclamos", label: "Reclamos" },
         // { to: "/admin/operaciones/buscar", label: "Buscar vuelos" }, // opcional
     ]), []);
 

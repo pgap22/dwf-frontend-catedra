@@ -11,7 +11,7 @@ import Unauthorized from "./pages/Unauthorized";
 import RoleRedirect from "./components/RoleRedirect";
 
 // Admin pages
-import AdminHome from "./pages/admin/AdminHome";              // NUEVO
+import AdminHome from "./pages/admin/AdminHome"; // NUEVO
 import AerolineasAdmin from "./pages/admin/AerolineasAdmin";
 import AeropuertosAdmin from "./pages/admin/AeropuertosAdmin";
 import AvionesAdmin from "./pages/admin/AvionesAdmin";
@@ -20,12 +20,23 @@ import TarifasAdmin from "./pages/admin/TarifasAdmin";
 import RutasAdmin from "./pages/admin/RutasAdmin";
 import TripulantesAdmin from "./pages/admin/TripulantesAdmin";
 import AsientosAdmin from "./pages/admin/AsientosAdmin";
+import ReservasAdmin from "./pages/admin/ReservasAdmin";
+import ReclamosAdmin from "./pages/admin/ReclamosAdmin";
 
 // Otros paneles (agente/cliente)
 import AgentPanel from "./pages/AgentPanel";
 import ClientPanel from "./pages/ClientPanel";
 import OperacionesAdmin from "./pages/admin/operaciones/OperacionesAdmin";
 import OperacionDetalleAdmin from "./pages/admin/operaciones/OperacionDetalleAdmin";
+import ClienteHome from "./pages/cliente/ClienteHome";
+import ClienteReservasLista from "./pages/cliente/ClienteReservasLista";
+import ClienteLayout from "./components/ClienteLayout";
+import ClienteReservaDetalle from "./pages/cliente/ClienteReservaDetalle";
+import ClienteReservaPago from "./pages/cliente/ClienteReservaPago";
+import ClienteReclamosLista from "./pages/cliente/ClienteReclamosLista";
+import ClienteReclamoCrear from "./pages/cliente/ClienteReclamoCrear";
+import ClientePerfil from "./pages/cliente/ClientePerfil";
+import ClientePasajeros from "./pages/cliente/ClientePasajeros";
 
 function App() {
   const { fetchUser, token } = useAuthStore();
@@ -72,6 +83,8 @@ function App() {
           <Route path="rutas" element={<RutasAdmin />} />
           <Route path="tripulantes" element={<TripulantesAdmin />} />
           <Route path="asientos" element={<AsientosAdmin />} />
+          <Route path="reservas" element={<ReservasAdmin />} />
+          <Route path="reclamos" element={<ReclamosAdmin />} />
 
           <Route path="operaciones" element={<OperacionesAdmin />} />
           <Route path="operaciones/:id" element={<OperacionDetalleAdmin />} />
@@ -90,10 +103,26 @@ function App() {
           path="/cliente"
           element={
             <ProtectedRoute roles={["CLIENTE"]}>
-              <ClientPanel />
+              <ClienteLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          {/* 👇 Tu ClientPanel queda como landing en /cliente */}
+          <Route index element={<ClientPanel />} />
+
+          {/* 👇 Vistas nuevas del cliente */}
+          <Route path="vuelos" element={<ClienteHome />} />
+          <Route path="reservas" element={<ClienteReservasLista />} />
+          <Route path="reservas/:codigo" element={<ClienteReservaDetalle />} />
+          <Route
+            path="reservas/:codigo/pago"
+            element={<ClienteReservaPago />}
+          />
+          <Route path="pasajeros" element={<ClientePasajeros />} />
+          <Route path="reclamos" element={<ClienteReclamosLista />} />
+          <Route path="reclamos/nuevo" element={<ClienteReclamoCrear />} />
+          <Route path="perfil" element={<ClientePerfil />} />
+        </Route>
 
         <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
